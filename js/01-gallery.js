@@ -13,7 +13,7 @@ const imagesMarkup = galleryItems
   alt = "${description}"/>
 </a></div>`).join("");
 
-galleryImg.insertAdjacentHTML('afterbegin', imagesMarkup);
+galleryImg.insertAdjacentHTML('begineend', imagesMarkup);
 galleryImg.addEventListener('click', onImagesClick);
 
 function onImagesClick(event) {
