@@ -1,80 +1,50 @@
 import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
-const galleryContainer = document.querySelector('.gallery');
-const galleryMarkup = createGalleryItems(galleryItems);
+const galleryImg = document.querySelector('.gallery');
 
-galleryContainer.insertAdjacentHTML('beforeend', galleryMarkup);
+const imagesMarkup = galleryItems
+.map(({preview,original,description}) => 
+`<div class = "gallery__item">
+<a class = "gallery__link" href = "${original}">
+<img class = "gallery__image"
+  src = "${preview}"
+  data-source = "${original}"
+  alt = "${description}"/>
+</a></div>`).join("");
 
-function createGalleryItems(galleryItems) {
-  return galleryItems.map(({preview, original, description}) => {
-    return`<div class="gallery__item">
- <a class="gallery__link" href="${original}">
-     <img
-       class="gallery__image"
-       src="${preview}"
-       data-source="${original}"
-       alt="${description}"
-     />
-   </a>
- </div>`;
-})
-.join('');
-  }
+galleryImg.insertAdjacentHTML('afterbegin', imagesMarkup);
+galleryImg.addEventListener('click', onImagesClick);
 
+function onImagesClick(event) {
+    event.preventDefault();
 
-// console.log(galleryMarkup);
-
-
-galleryContainer.addEventListener('click', onGalleryContainerClick);
-
-
-function onGalleryContainerClick(event){
-   event.preventDefault();
-   console.log(event.target.dataset.sourse);
-
-
-  if(!event.target.classList.contains('gallery__image')){
+    if (!event.target.classList.contains('gallery__image')) {
     return;
-  }
-  window.addEventListener("keydown",onEscapePress);
+ };
 
+ galleryImg.addEventListener('click', onImagesClick);
 
-  const instance = basicLightbox.create(
-    `<img src="${target.dataset.source}" width="800" height="600">`, );
-    instance.show();   
-       
-  }
- 
+const modalWindow = basicLightbox.create(`<div class = "modal">
+ <img src = "${event.target.dataset.source}" width = "800" height = "600">
+</div>`, {
+    onShow: (modalWindow) => {
+        window.addEventListener('keydown', onKeyboardClick);
+        console.log('onShow', modalWindow);
+    },
+    onClose: (modalWindow) => {
+        window.removeEventListener('keydown', onKeyboardClick);
+        console.log('onClose', modalWindow);
+    },
+   }
+   );
 
-  function onEscapePress(event){
-    if (event.key === "Escape"){
-      instance.close();
-  
-      window.removeEventListener("keydown", onEscapePress);
-      console.log (event.code);
-    }
-    const instance = basicLightbox.create(
-      `<img src="${target.dataset.source}" width="800" height="600">`,
-      
-      { 
-        onShow: instance =>{
-         document.addEventListener("keydown", function(event){
-           if (event.key ==="Escape"){
-             return instance.close();}
-         });
-          },
-        onClose:instance =>{
-         document.addEventListener("keydown", function(event){
-           if (event.key ==="Escape"){
-             return instance.close();}
-         });
-         },
-       }
-     
-        );
-    
- instance.show();}
-
+modalWindow.show()
+function onKeyboardClick (event) {
+if(event.code === 'Escape') {
+    modalWindow.close();
+  };
+ };
+};
 
 
